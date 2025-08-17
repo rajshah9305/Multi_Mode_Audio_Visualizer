@@ -44,7 +44,7 @@
         input[type="range"]:active::-webkit-slider-thumb { transform: scale(1.2); box-shadow: 0 0 15px rgba(138, 92, 244, 0.8); }
         #startButton { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 20; padding: 1rem 2rem; font-size: 1.25rem; background-color: #8A5CF4; color: white; border: none; border-radius: 0.5rem; cursor: pointer; transition: all 0.2s ease-in-out; box-shadow: 0 0 20px rgba(138, 92, 244, 0.5); }
         #startButton:hover { transform: translate(-50%, -50%) scale(1.05); box-shadow: 0 0 30px rgba(138, 92, 244, 0.8); }
-        .icon-bar { display: flex; gap: 0.75rem; padding: 0.75rem; }
+        .icon-bar { display: flex; gap: 0.75rem; padding: 0.75rem; flex-wrap: wrap; justify-content: flex-start; }
         .vis-button { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; background-color: transparent; border: 1px solid transparent; color: #A0A0B0; border-radius: 0.75rem; cursor: pointer; transition: all 0.2s ease; }
         .vis-button:hover { background-color: rgba(255, 255, 255, 0.1); color: #FFF; transform: translateY(-2px); }
         .vis-button.active { background-color: #8A5CF4; color: white; border-color: rgba(167, 139, 250, 0.5); box-shadow: 0 0 20px rgba(167, 139, 250, 0.5), 0 0 40px rgba(167, 139, 250, var(--glow-opacity)); }
@@ -52,14 +52,40 @@
         #toggleControlsBtn .icon-minimize { display: none; }
         #toggleControlsBtn.open .icon-minimize { display: block; }
         #toggleControlsBtn.open .icon-expand { display: none; }
-        #player-container { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 10; width: 400px; padding: 1rem; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
+        #player-container { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); z-index: 10; width: 90%; max-width: 400px; padding: 1rem; opacity: 0; pointer-events: none; transition: all 0.3s ease; }
         #player-container.visible { opacity: 1; pointer-events: auto; }
         #song-title { text-align: center; font-size: 0.9rem; color: #ccc; margin-bottom: 0.5rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         #timeline { width: 100%; }
-        .palette-selector { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+        .palette-selector { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
         .palette-button { width: 24px; height: 24px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s ease; }
         .palette-button.active { border-color: white; transform: scale(1.2); }
         .text-input { width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 0.5rem; border-radius: 0.5rem; margin-bottom: 1rem; }
+        
+        /* --- Responsive Design for Mobile --- */
+        @media (max-width: 768px) {
+            #ui-container {
+                left: 50%;
+                transform: translateX(-50%);
+                width: 90vw;
+                align-items: center; /* Center items for a cleaner mobile look */
+            }
+            #ui-container.visible { 
+                transform: translateX(-50%);
+            }
+            .icon-bar {
+                justify-content: center; /* Center the icons within the bar */
+            }
+            .controls {
+                width: 100%; /* Make controls panel full width of its container */
+            }
+            #player-container {
+                width: 90vw; /* Player takes up more screen width */
+            }
+            #startButton {
+                padding: 0.8rem 1.5rem;
+                font-size: 1.1rem; /* Slightly smaller start button */
+            }
+        }
     </style>
 </head>
 <body>
@@ -69,12 +95,12 @@
     
     <div id="ui-container">
         <div class="icon-bar glass-panel">
-            <button class="vis-button" data-vis="galaxy" title="Galaxy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
-            <button class="vis-button" data-vis="waves" title="Waves"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2zM3 12s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2zM3 18s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2z"></path></svg></button>
-            <button class="vis-button" data-vis="network" title="Network"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="22" x2="12" y2="15"></line><line x1="12" y1="9" x2="12" y2="2"></line><line x1="22" y1="12" x2="15" y2="12"></line><line x1="9" y1="12" x2="2" y2="12"></line></svg></button>
-            <button class="vis-button" data-vis="spectrum" title="Spectrum"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 10h3v10H2zM7 6h3v14H7zM12 2h3v20h-3zM17 10h3v10h-3z"></path></svg></button>
-            <button class="vis-button" data-vis="flow" title="Particle Flow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"></path></svg></button>
-            <button class="vis-button" data-vis="text" title="Text Morph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg></button>
+            <button class="vis-button" data-vis="galaxy" title="Galaxy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></button>
+            <button class="vis-button" data-vis="waves" title="Waves"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2zM3 12s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2zM3 18s4-2 8 0 8 2 8 2-4 2-8 0-8-2-8-2z"></path></svg></button>
+            <button class="vis-button" data-vis="network" title="Network"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="22" x2="12" y2="15"></line><line x1="12" y1="9" x2="12" y2="2"></line><line x1="22" y1="12" x2="15" y2="12"></line><line x1="9" y1="12" x2="2" y2="12"></line></svg></button>
+            <button class="vis-button" data-vis="spectrum" title="Spectrum"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 10h3v10H2zM7 6h3v14H7zM12 2h3v20h-3zM17 10h3v10h-3z"></path></svg></button>
+            <button class="vis-button" data-vis="flow" title="Particle Flow"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></button>
+            <button class="vis-button" data-vis="text" title="Text Morph"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V4h16v3M9 20h6M12 4v16"></path></svg></button>
             <button id="toggleControlsBtn" class="vis-button" title="Toggle Controls">
                 <svg class="icon-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg>
                 <svg class="icon-minimize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
@@ -94,6 +120,11 @@
     <button id="startButton">Start</button>
     
     <script>
+        // --- FIX: Remove duplicate elements before script runs ---
+        document.querySelectorAll('#startButton').forEach((el, index) => {
+            if (index > 0) el.remove();
+        });
+
         // --- App Setup ---
         const visualizerCanvas = document.getElementById('visualizerCanvas');
         const backgroundCanvas = document.getElementById('background-canvas');
@@ -136,127 +167,9 @@
             text: [ { type: 'text', id: 'text', value: 'MUSIC' }, { id: 'particleSize', label: 'Particle Size', min: 0.5, max: 5, value: 1.5, step: 0.1 }, { id: 'repulsion', label: 'Mouse Repulsion', min: 0, max: 200, value: 100, step: 5 }, { id: 'returnForce', label: 'Return Force', min: 0.01, max: 0.2, value: 0.05, step: 0.01 } ]
         };
 
-        // --- UI Builder ---
-        function buildControls(visName) {
-            controlsContainer.innerHTML = '';
-            // Palette Selector
-            const paletteContainer = document.createElement('div');
-            paletteContainer.className = 'palette-selector';
-            palettes.forEach((p, i) => {
-                const btn = document.createElement('button');
-                btn.className = 'palette-button';
-                if (i === activePalette) btn.classList.add('active');
-                btn.style.background = `linear-gradient(45deg, ${p.colors[0]}, ${p.colors[2]})`;
-                btn.title = p.name;
-                btn.onclick = () => { activePalette = i; buildControls(visName); };
-                paletteContainer.appendChild(btn);
-            });
-            controlsContainer.appendChild(paletteContainer);
+        // Perlin Noise implementation
+        const noise = (function(){var p=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];for(var i=0;i<256;i++)p[256+i]=p[i];function fade(t){return t*t*t*(t*(t*6-15)+10)}function lerp(t,a,b){return a+t*(b-a)}function grad(hash,x,y,z){var h=hash&15,u=h<8?x:y,v=h<4?y:h==12||h==14?x:z;return((h&1)==0?u:-u)+((h&2)==0?v:-v)}return{perlin2:function(x,y){var X=Math.floor(x)&255,Y=Math.floor(y)&255;x-=Math.floor(x);y-=Math.floor(y);var u=fade(x),v=fade(y),A=p[X]+Y,B=p[X+1]+Y;return lerp(v,lerp(u,grad(p[A],x,y),grad(p[B],x-1,y)),lerp(u,grad(p[A+1],x,y-1),grad(p[B+1],x-1,y-1)))*0.5+0.5}}}());
 
-            const schema = controlSchemas[visName];
-            controlsTitle.textContent = `${visName.charAt(0).toUpperCase() + visName.slice(1)} Controls`;
-            if (!schema || schema.length === 0) {
-                controlsPanel.classList.remove('open');
-                toggleControlsBtn.classList.remove('open');
-                return;
-            }
-            schema.forEach(control => {
-                if (control.type === 'text') {
-                    const input = document.createElement('input');
-                    input.type = 'text';
-                    input.className = 'text-input';
-                    input.value = params[control.id] || control.value;
-                    input.placeholder = 'Enter Text...';
-                    input.onchange = (e) => {
-                        params[control.id] = e.target.value.toUpperCase();
-                        if(visualizations[visName].init) visualizations[visName].init();
-                    };
-                    controlsContainer.appendChild(input);
-                } else {
-                    if(params[control.id] === undefined) params[control.id] = control.value;
-                    const group = document.createElement('div');
-                    group.className = 'control-group';
-                    const label = document.createElement('label');
-                    label.htmlFor = control.id;
-                    label.textContent = control.label;
-                    const input = document.createElement('input');
-                    input.type = 'range'; input.id = control.id; input.min = control.min;
-                    input.max = control.max; input.value = params[control.id]; input.step = control.step;
-                    input.addEventListener('input', (e) => {
-                        params[control.id] = parseFloat(e.target.value);
-                        if (control.id === 'smoothing' && analyser) analyser.smoothingTimeConstant = params.smoothing;
-                    });
-                    group.appendChild(label); group.appendChild(input);
-                    controlsContainer.appendChild(group);
-                }
-            });
-            if (!controlsPanel.classList.contains('open')) {
-                controlsPanel.classList.add('open');
-                toggleControlsBtn.classList.add('open');
-            }
-        }
-
-        // --- Core Systems: Mouse, Resize, Audio, etc. ---
-        const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, normalizedX: 0.5, normalizedY: 0.5 };
-        window.addEventListener('mousemove', (e) => { 
-            mouse.x = e.clientX; 
-            mouse.y = e.clientY; 
-            mouse.normalizedX = e.clientX / window.innerWidth - 0.5;
-            mouse.normalizedY = e.clientY / window.innerHeight - 0.5;
-            showUI();
-        });
-        function resizeAll() { visualizerCanvas.width = window.innerWidth; visualizerCanvas.height = window.innerHeight; backgroundCanvas.width = window.innerWidth; backgroundCanvas.height = window.innerHeight; }
-        window.addEventListener('resize', resizeAll);
-        resizeAll();
-
-        function setupAudio(sourceNode) {
-            analyser = audioContext.createAnalyser();
-            sourceNode.connect(analyser);
-            if (sourceNode.constructor.name !== 'MediaStreamAudioSourceNode') {
-                analyser.connect(audioContext.destination);
-            }
-            analyser.fftSize = 512;
-            analyser.smoothingTimeConstant = params.smoothing || 0.8;
-            const bufferLength = analyser.frequencyBinCount;
-            audioData = new Uint8Array(bufferLength);
-            timeData = new Uint8Array(bufferLength);
-        }
-
-        function processAudio(safeAudio) {
-            const bass = safeAudio.slice(0, 8).reduce((a, b) => a + b, 0) / (8 * 255);
-            const mid = safeAudio.slice(8, 64).reduce((a, b) => a + b, 0) / (56 * 255);
-            const treble = safeAudio.slice(64).reduce((a, b) => a + b, 0) / (192 * 255);
-            return { bass, mid, treble };
-        }
-
-        // --- Background ---
-        const bgCtx = backgroundCanvas.getContext('2d');
-        function animateBackground(time) {
-            bgCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
-            const grad = bgCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, Math.max(backgroundCanvas.width, backgroundCanvas.height));
-            const hue1 = (time * 0.005) % 360;
-            const hue2 = (time * 0.005 + 120) % 360;
-            grad.addColorStop(0, `hsl(${hue1}, 50%, 15%)`);
-            grad.addColorStop(1, `hsl(${hue2}, 50%, 5%)`);
-            bgCtx.fillStyle = grad;
-            bgCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
-        }
-
-        // --- Beat Detection ---
-        let beatState = { history: new Array(60).fill(0), threshold: 1.5, lastBeat: 0 };
-        function detectBeat(bassLevel) {
-            const history = beatState.history;
-            history.push(bassLevel);
-            history.shift();
-            const avg = history.reduce((a,b) => a+b, 0) / history.length;
-            const stdDev = Math.sqrt(history.map(x => Math.pow(x - avg, 2)).reduce((a,b) => a+b, 0) / history.length);
-            if (bassLevel > avg + stdDev * beatState.threshold && Date.now() - beatState.lastBeat > 200) {
-                beatState.lastBeat = Date.now();
-                document.documentElement.style.setProperty('--beat-flash', '0.15');
-                setTimeout(() => document.documentElement.style.setProperty('--beat-flash', '0'), 100);
-            }
-        }
-        
         // --- VISUALIZATIONS (Standardized Structure) ---
         const visualizations = {
             galaxy: {
@@ -445,7 +358,7 @@
                     const ctx = visualizerCanvas.getContext('2d'); const { width, height } = ctx.canvas;
                     ctx.clearRect(0,0,width,height);
                     ctx.fillStyle = "white";
-                    ctx.font = "bold 15vw Inter";
+                    ctx.font = `bold ${Math.min(15, width / (text.length * 5))}vw Inter`;
                     ctx.textAlign = "center";
                     ctx.textBaseline = "middle";
                     ctx.fillText(text, width/2, height/2);
@@ -505,6 +418,151 @@
             }
         };
 
+        // --- UI Builder ---
+        function buildControls(visName) {
+            controlsContainer.innerHTML = '';
+            // Palette Selector
+            const paletteContainer = document.createElement('div');
+            paletteContainer.className = 'palette-selector';
+            palettes.forEach((p, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'palette-button';
+                if (i === activePalette) btn.classList.add('active');
+                btn.style.background = `linear-gradient(45deg, ${p.colors[0]}, ${p.colors[2]})`;
+                btn.title = p.name;
+                btn.onclick = () => { activePalette = i; buildControls(visName); };
+                paletteContainer.appendChild(btn);
+            });
+            controlsContainer.appendChild(paletteContainer);
+
+            const schema = controlSchemas[visName];
+            controlsTitle.textContent = `${visName.charAt(0).toUpperCase() + visName.slice(1)} Controls`;
+            if (!schema || schema.length === 0) {
+                controlsPanel.classList.remove('open');
+                toggleControlsBtn.classList.remove('open');
+                return;
+            }
+            schema.forEach(control => {
+                if (control.type === 'text') {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'text-input';
+                    input.value = params[control.id] || control.value;
+                    input.placeholder = 'Enter Text...';
+                    input.onchange = (e) => {
+                        params[control.id] = e.target.value.toUpperCase();
+                        if(visualizations[visName].init) visualizations[visName].init();
+                    };
+                    controlsContainer.appendChild(input);
+                } else {
+                    if(params[control.id] === undefined) params[control.id] = control.value;
+                    const group = document.createElement('div');
+                    group.className = 'control-group';
+                    const label = document.createElement('label');
+                    label.htmlFor = control.id;
+                    label.textContent = control.label;
+                    const input = document.createElement('input');
+                    input.type = 'range'; input.id = control.id; input.min = control.min;
+                    input.max = control.max; input.value = params[control.id]; input.step = control.step;
+                    input.addEventListener('input', (e) => {
+                        params[control.id] = parseFloat(e.target.value);
+                        if (control.id === 'smoothing' && analyser) analyser.smoothingTimeConstant = params.smoothing;
+                    });
+                    group.appendChild(label); group.appendChild(input);
+                    controlsContainer.appendChild(group);
+                }
+            });
+            if (!controlsPanel.classList.contains('open')) {
+                controlsPanel.classList.add('open');
+                toggleControlsBtn.classList.add('open');
+            }
+        }
+
+        // --- Core Systems: Mouse, Resize, Audio, etc. ---
+        const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2, normalizedX: 0.5, normalizedY: 0.5 };
+        
+        function handleMouseMove(e) {
+            mouse.x = e.clientX; 
+            mouse.y = e.clientY; 
+            mouse.normalizedX = e.clientX / window.innerWidth - 0.5;
+            mouse.normalizedY = e.clientY / window.innerHeight - 0.5;
+            showUI();
+        }
+
+        function handleTouchMove(e) {
+            if (e.touches.length > 0) {
+                const touch = e.touches[0];
+                mouse.x = touch.clientX;
+                mouse.y = touch.clientY;
+                mouse.normalizedX = touch.clientX / window.innerWidth - 0.5;
+                mouse.normalizedY = touch.clientY / window.innerHeight - 0.5;
+            }
+        }
+
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+        function resizeAll() { 
+            visualizerCanvas.width = window.innerWidth; 
+            visualizerCanvas.height = window.innerHeight; 
+            backgroundCanvas.width = window.innerWidth; 
+            backgroundCanvas.height = window.innerHeight;
+            // Re-initialize visualization on resize to adapt to new dimensions
+            if (visualizations[activeVisualization] && visualizations[activeVisualization].init) {
+                visualizations[activeVisualization].init();
+            }
+        }
+        window.addEventListener('resize', resizeAll);
+        resizeAll();
+
+        function setupAudio(sourceNode) {
+            analyser = audioContext.createAnalyser();
+            sourceNode.connect(analyser);
+            if (sourceNode.constructor.name !== 'MediaStreamAudioSourceNode') {
+                analyser.connect(audioContext.destination);
+            }
+            analyser.fftSize = 512;
+            analyser.smoothingTimeConstant = params.smoothing || 0.8;
+            const bufferLength = analyser.frequencyBinCount;
+            audioData = new Uint8Array(bufferLength);
+            timeData = new Uint8Array(bufferLength);
+        }
+
+        function processAudio(safeAudio) {
+            const bass = safeAudio.slice(0, 8).reduce((a, b) => a + b, 0) / (8 * 255);
+            const mid = safeAudio.slice(8, 64).reduce((a, b) => a + b, 0) / (56 * 255);
+            const treble = safeAudio.slice(64).reduce((a, b) => a + b, 0) / (192 * 255);
+            return { bass, mid, treble };
+        }
+
+        // --- Background ---
+        const bgCtx = backgroundCanvas.getContext('2d');
+        function animateBackground(time) {
+            bgCtx.clearRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+            const grad = bgCtx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, Math.max(backgroundCanvas.width, backgroundCanvas.height));
+            const hue1 = (time * 0.005) % 360;
+            const hue2 = (time * 0.005 + 120) % 360;
+            grad.addColorStop(0, `hsl(${hue1}, 50%, 15%)`);
+            grad.addColorStop(1, `hsl(${hue2}, 50%, 5%)`);
+            bgCtx.fillStyle = grad;
+            bgCtx.fillRect(0, 0, backgroundCanvas.width, backgroundCanvas.height);
+        }
+
+        // --- Beat Detection ---
+        let beatState = { history: new Array(60).fill(0), threshold: 1.5, lastBeat: 0 };
+        function detectBeat(bassLevel) {
+            const history = beatState.history;
+            history.push(bassLevel);
+            history.shift();
+            const avg = history.reduce((a,b) => a+b, 0) / history.length;
+            const stdDev = Math.sqrt(history.map(x => Math.pow(x - avg, 2)).reduce((a,b) => a+b, 0) / history.length);
+            if (bassLevel > avg + stdDev * beatState.threshold && Date.now() - beatState.lastBeat > 200) {
+                beatState.lastBeat = Date.now();
+                document.documentElement.style.setProperty('--beat-flash', '0.15');
+                setTimeout(() => document.documentElement.style.setProperty('--beat-flash', '0'), 100);
+            }
+        }
+        
         // --- Main Loop ---
         function loop(time) {
             frameCount++;
@@ -541,8 +599,10 @@
             clearTimeout(uiVisibleTimeout);
             uiContainer.classList.add('visible');
             uiVisibleTimeout = setTimeout(() => {
-                uiContainer.classList.remove('visible');
-            }, 1500); // Shorter timeout
+                if (!controlsPanel.matches(':hover')) {
+                     uiContainer.classList.remove('visible');
+                }
+            }, 3000); // Longer timeout for better usability
         }
 
         uiContainer.addEventListener('mouseenter', () => clearTimeout(uiVisibleTimeout));
@@ -567,26 +627,37 @@
             toggleControlsBtn.classList.toggle('open');
         });
 
-        startButton.addEventListener('click', () => {
-            startButton.disabled = true; startButton.textContent = 'Initializing...';
-            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    const sourceNode = audioContext.createMediaStreamSource(stream);
-                    setupAudio(sourceNode);
-                })
-                .catch(err => console.error("Microphone access denied.", err))
-                .finally(() => {
-                    startButton.style.display = 'none';
-                    showUI();
-                    document.querySelector(`.vis-button[data-vis="${activeVisualization}"]`).classList.add('active');
-                    buildControls(activeVisualization);
-                    requestAnimationFrame(loop);
-                });
-        });
-        
-        // Perlin Noise implementation
-        const noise = (function(){var p=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];for(var i=0;i<256;i++)p[256+i]=p[i];function fade(t){return t*t*t*(t*(t*6-15)+10)}function lerp(t,a,b){return a+t*(b-a)}function grad(hash,x,y,z){var h=hash&15,u=h<8?x:y,v=h<4?y:h==12||h==14?x:z;return((h&1)==0?u:-u)+((h&2)==0?v:-v)}return{perlin2:function(x,y){var X=Math.floor(x)&255,Y=Math.floor(y)&255;x-=Math.floor(x);y-=Math.floor(y);var u=fade(x),v=fade(y),A=p[X]+Y,B=p[X+1]+Y;return lerp(v,lerp(u,grad(p[A],x,y),grad(p[B],x-1,y)),lerp(u,grad(p[A+1],x,y-1),grad(p[B+1],x-1,y-1)))*0.5+0.5}}}())
+        if (startButton) {
+            startButton.addEventListener('click', () => {
+                startButton.disabled = true; startButton.textContent = 'Initializing...';
+                if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                
+                // Resume audio context on user gesture
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+
+                navigator.mediaDevices.getUserMedia({ audio: true })
+                    .then(stream => {
+                        const sourceNode = audioContext.createMediaStreamSource(stream);
+                        setupAudio(sourceNode);
+                    })
+                    .catch(err => {
+                        console.error("Microphone access denied.", err);
+                        startButton.textContent = "Mic Error - Click to Retry";
+                        startButton.disabled = false;
+                    })
+                    .finally(() => {
+                        if(analyser) {
+                            startButton.style.display = 'none';
+                            showUI();
+                            document.querySelector(`.vis-button[data-vis="${activeVisualization}"]`).classList.add('active');
+                            buildControls(activeVisualization);
+                            requestAnimationFrame(loop);
+                        }
+                    });
+            });
+        }
     </script>
 </body>
 </html>
